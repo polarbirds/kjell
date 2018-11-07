@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const secrit = require("./secrit.json");
+const store = require("./store.json");
 
 const client = new Discord.Client();
 
@@ -16,6 +17,8 @@ client.on("message", (message) => {
                 message.channel.send("Fuck you!");
             } else {
                 try {
+                    store.jsonString = JSON.stringify(message.content.substr(1, message.content.length), functionReplacer);
+                    console.log(JSON.stringify(message.content.substr(1, message.content.length), functionReplacer))
                     var res = eval(message.content.substr(1, message.content.length));
                     message.channel.send(">" + res);
                 } catch(err) {
@@ -26,4 +29,21 @@ client.on("message", (message) => {
     }
 });
 
+function functionReplacer(key, value) {
+    if (typeof(value) === 'function') {
+        return value.toString();
+    }
+    return value;
+}
+
 client.login(secrit.token);
+
+
+// Prevent imports
+// var Module = require('module');
+// var originalRequire = Module.prototype.require;
+
+// Module.prototype.require = function(){
+//   if (arguments.contains("vagene")) return {niga: () => "kek"};
+//   return originalRequire.apply(this, arguments);
+// };
